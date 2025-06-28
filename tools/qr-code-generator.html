@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Generator - Multi-Tools</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        .tool-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .input-section {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin: 20px 0;
+        }
+        .input-section input, .input-section textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            margin: 10px 0;
+        }
+        .input-section textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        .generate-btn {
+            background: #77aaff;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .generate-btn:hover {
+            background: #5588dd;
+        }
+        .qr-output {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .qr-code {
+            margin: 20px 0;
+        }
+        .download-btn {
+            background: #28a745;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            display: inline-block;
+            margin: 10px;
+        }
+        .size-options {
+            margin: 15px 0;
+        }
+        .size-options label {
+            margin-right: 15px;
+        }
+    </style>
+</head>
+<body>
+    <header id="main-header"></header>
+
+    <main>
+        <div class="tool-container">
+            <h1>QR Code Generator</h1>
+            <p>Generate customizable QR codes for text, URLs, and more.</p>
+            
+            <div class="input-section">
+                <label for="qr-text">Enter text or URL:</label>
+                <textarea id="qr-text" placeholder="Enter text, URL, or any content to generate QR code..."></textarea>
+                
+                <div class="size-options">
+                    <label>Size:</label>
+                    <label><input type="radio" name="size" value="200" checked> Small (200x200)</label>
+                    <label><input type="radio" name="size" value="300"> Medium (300x300)</label>
+                    <label><input type="radio" name="size" value="400"> Large (400x400)</label>
+                </div>
+                
+                <button class="generate-btn" onclick="generateQR()">Generate QR Code</button>
+            </div>
+            
+            <div class="qr-output" id="qr-output" style="display: none;">
+                <h3>Your QR Code:</h3>
+                <div class="qr-code" id="qr-code"></div>
+                <a href="#" class="download-btn" id="download-btn" download="qrcode.png">Download QR Code</a>
+            </div>
+            
+            <div class="ad-space">Advertisement Space</div>
+        </div>
+    </main>
+
+    <footer id="main-footer"></footer>
+
+    <script src="../js/script.js"></script>
+    <script>
+        function generateQR() {
+            const text = document.getElementById('qr-text').value.trim();
+            const size = document.querySelector('input[name="size"]:checked').value;
+            
+            if (!text) {
+                alert('Please enter text or URL to generate QR code');
+                return;
+            }
+            
+            // Using QR Server API (free service)
+            const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&data=${encodeURIComponent(text)}`;
+            
+            const qrOutput = document.getElementById('qr-output');
+            const qrCode = document.getElementById('qr-code');
+            const downloadBtn = document.getElementById('download-btn');
+            
+            qrCode.innerHTML = `<img src="${qrUrl}" alt="QR Code" style="max-width: 100%; height: auto;">`;
+            downloadBtn.href = qrUrl;
+            downloadBtn.download = `qrcode-${Date.now()}.png`;
+            
+            qrOutput.style.display = 'block';
+        }
+        
+        // Allow Enter key to generate QR code
+        document.getElementById('qr-text').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                generateQR();
+            }
+        });
+    </script>
+</body>
+</html>
+
