@@ -1,16 +1,28 @@
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Load header and footer
-    fetch('header.html')
+    // Determine the correct path based on current page location
+    const isInToolsDirectory = window.location.pathname.includes('/tools/');
+    const basePath = isInToolsDirectory ? '../' : '';
+    
+    // Load header and footer with correct paths
+    fetch(basePath + 'header.html')
         .then(response => response.text())
         .then(data => {
             document.getElementById('main-header').innerHTML = data;
+        })
+        .catch(error => {
+            console.error('Error loading header:', error);
+            document.getElementById('main-header').innerHTML = '<div style="padding: 20px; background: #333; color: white; text-align: center;"><h1>🛠️ Multi-Tools</h1></div>';
         });
 
-    fetch('footer.html')
+    fetch(basePath + 'footer.html')
         .then(response => response.text())
         .then(data => {
             document.getElementById('main-footer').innerHTML = data;
+        })
+        .catch(error => {
+            console.error('Error loading footer:', error);
+            document.getElementById('main-footer').innerHTML = '<div style="padding: 20px; background: #333; color: white; text-align: center;"><p>&copy; 2024 Multi-Tools. All rights reserved.</p></div>';
         });
 
     // Tool data structure
